@@ -1,0 +1,29 @@
+---
+import Footer from '../components/Footer.astro'
+import Head from '../components/Head.astro'
+import VisuallyHidden from '../components/VisuallyHidden.astro'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head />
+  </head>
+  <body>
+    <main id="content">
+      <h1>
+        <VisuallyHidden>Astro Glob Loader Config Generator</VisuallyHidden>
+        <span aria-hidden="true">Astro <code>`glob()`</code> Loader Config Generator</span>
+      </h1>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  :where(html) {
+    --size-npx: -1px;
+    --size-px: 1px;
+  }
+</style>
