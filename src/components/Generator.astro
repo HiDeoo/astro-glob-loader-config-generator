@@ -22,7 +22,6 @@ const items = defineCollection({
 export const collections = { items };`
 
 // TODO(HiDeoo) error message?
-// TODO(HiDeoo) base question: mention path relatove from root
 ---
 
 <astro-glob-loader-config-generator>
@@ -42,7 +41,7 @@ export const collections = { items };`
         </div>
       </fieldset>
       <div>
-        <label for="base">Where is the content located?</label>
+        <label for="base">Where is the content based on the root of your project?</label>
         <input
           type="text"
           id="base"
