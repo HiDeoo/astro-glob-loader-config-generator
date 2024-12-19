@@ -16,7 +16,6 @@ export const collections = { items };`
 // TODO(HiDeoo) loop for extensions
 
 // TODO(HiDeoo) no file type checked?
-// TODO(HiDeoo) ignore starting with _
 // TODO(HiDeoo) filetree preview
 
 // TODO(HiDeoo) validation - empty base
@@ -40,6 +39,10 @@ export const collections = { items };`
       <div>
         <label for="collectionName">What's the collection name?</label>
         <input type="text" id="collectionName" name="collectionName" value="items" required minlength="1" />
+      </div>
+      <div>
+        <input type="checkbox" id="excludeLeadingUnderscore" name="excludeLeadingUnderscore" />
+        <label for="excludeLeadingUnderscore">Exclude files starting with an underscore</label>
       </div>
     </form>
     <Code {code} lang="ts" title="src/content.config.ts" />
@@ -97,12 +100,13 @@ export const collections = { items };`
         if (!this.#patternElement) return
 
         const extensions = this.#extensions.filter((ext) => data.has(ext))
+        const excludePattern = data.has('excludeLeadingUnderscore') ? '[^_]' : ''
         const pattern =
           extensions.length === 0
-            ? '**/*'
+            ? `**/*${excludePattern}`
             : extensions.length === 1
-              ? `**/*.${extensions[0]}`
-              : `**/*.{${extensions.join(',')}}`
+              ? `**/${excludePattern}*.${extensions[0]}`
+              : `**/${excludePattern}*.{${extensions.join(',')}}`
 
         this.#patternElement.textContent = pattern
       }
