@@ -14,49 +14,70 @@ import { defineCollection } from 'astro:content';
 
 const items = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: "**/[^_]*.md",
     base: "src/data/items",
   }),
 });
 
 export const collections = { items };`
 
-// TODO(HiDeoo) filetree preview
+// TODO(HiDeoo) error message?
+// TODO(HiDeoo) base question: mention path relatove from root
 ---
 
 <astro-glob-loader-config-generator>
   <div>
     <form>
       <fieldset>
-        <legend>USING?</legend>
-        {
-          extensions.map(({ ext, label }, index) => (
-            <>
-              <input type="checkbox" id={ext} name={ext} checked={index === 0} />
-              <label for={ext}>{label}</label>
-            </>
-          ))
-        }
+        <legend>What kind of content do you want to load?</legend>
+        <div>
+          {
+            extensions.map(({ ext, label }, index) => (
+              <label>
+                <input type="checkbox" name={ext} checked={index === 0} />
+                {label}
+              </label>
+            ))
+          }
+        </div>
       </fieldset>
       <div>
-        <label for="base">Where are your items located?</label>
-        <input type="text" id="base" name="base" value="src/data/items" required pattern="[^\\\\\\/][^\\\\]+" />
+        <label for="base">Where is the content located?</label>
+        <input
+          type="text"
+          id="base"
+          name="base"
+          value="src/data/items"
+          placeholder="src/data/items"
+          required
+          pattern="[^\\\\\\/][^\\\\]*"
+        />
       </div>
       <div>
-        <label for="collectionName">What's the collection name?</label>
+        <label for="collectionName">What should the collection be named?</label>
         <input
           type="text"
           id="collectionName"
           name="collectionName"
           value="items"
+          placeholder="items"
           required
           pattern="[a-zA-Z_$][\\w_$]*"
         />
       </div>
-      <div>
-        <input type="checkbox" id="excludeLeadingUnderscore" name="excludeLeadingUnderscore" />
-        <label for="excludeLeadingUnderscore">Exclude files starting with an underscore</label>
-      </div>
+      <fieldset>
+        <legend>Should files starting with an underscore be excluded?</legend>
+        <div>
+          <label>
+            <input type="radio" name="excludeLeadingUnderscore" value="yes" checked />
+            Yes
+          </label>
+          <label>
+            <input type="radio" name="excludeLeadingUnderscore" value="no" />
+            No
+          </label>
+        </div>
+      </fieldset>
     </form>
     <Code {code} lang="ts" title="src/content.config.ts" />
   </div>
@@ -69,8 +90,50 @@ export const collections = { items };`
     padding: var(--size-4);
   }
 
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-3);
+  }
+
+  fieldset > div {
+    background-color: var(--color-zinc-700);
+    border: var(--size-px) solid var(--color-zinc-600);
+    display: flex;
+    flex-direction: column;
+    padding: var(--size-1-5) var(--size-3);
+  }
+
+  @media (min-width: 35rem) {
+    fieldset > div {
+      flex-direction: row;
+      gap: var(--size-4);
+    }
+  }
+
+  legend,
+  form > div > label {
+    display: block;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    margin-bottom: var(--size-1-5);
+  }
+
+  input[type='text'] {
+    background-color: var(--color-zinc-700);
+    border: var(--size-px) solid var(--color-zinc-600);
+    outline-offset: 3px;
+    padding: var(--size-1-5) var(--size-3);
+    width: 100%;
+  }
+
   input[type='text']:invalid {
-    border: 4px solid red;
+    border-color: red;
+  }
+
+  input[type='radio'],
+  input[type='checkbox'] {
+    margin-inline-end: var(--size-1);
   }
 </style>
 
@@ -125,7 +188,7 @@ export const collections = { items };`
           extensions.push(extension)
         }
 
-        const excludePattern = data.has('excludeLeadingUnderscore') ? '[^_]' : ''
+        const excludePattern = String(data.get('excludeLeadingUnderscore')) === 'yes' ? '[^_]' : ''
         const pattern =
           extensions.length === 0
             ? `**/*${excludePattern}`
