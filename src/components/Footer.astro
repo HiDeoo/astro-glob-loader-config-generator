@@ -4,3 +4,28 @@
   </a>
   <a href="https://github.com/HiDeoo/astro-glob-loader-config-generator/issues/new/choose">Report an issue</a>
 </footer>
+
+<style>
+  footer {
+    align-items: center;
+    display: flex;
+    color: var(--color-zinc-400);
+    flex-direction: column;
+    font-size: var(--text-xs);
+    gap: var(--size-1);
+  }
+
+  a {
+    border-radius: var(--rounded);
+    text-decoration: underline;
+  }
+
+  a:is(:hover, :focus-visible) {
+    color: var(--color-zinc-50);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--color-zinc-50);
+    outline-offset: 2px;
+  }
+</style>
