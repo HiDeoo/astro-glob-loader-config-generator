@@ -20,8 +20,6 @@ const items = defineCollection({
 });
 
 export const collections = { items };`
-
-// TODO(HiDeoo) error message?
 ---
 
 <astro-glob-loader-config-generator>
@@ -41,28 +39,30 @@ export const collections = { items };`
         </div>
       </fieldset>
       <div>
-        <label for="base">Where is the content based on the root of your project?</label>
-        <input
-          type="text"
-          id="base"
-          name="base"
-          value="src/data/items"
-          placeholder="src/data/items"
-          required
-          pattern="[^\\\\\\/][^\\\\]*"
-        />
+        <label>
+          Where is the content based on the root of your project?
+          <input
+            type="text"
+            name="base"
+            value="src/data/items"
+            placeholder="src/data/items"
+            required
+            pattern="[^\\\\\\/][^\\\\]*"
+          />
+        </label>
       </div>
       <div>
-        <label for="collectionName">What should the collection be named?</label>
-        <input
-          type="text"
-          id="collectionName"
-          name="collectionName"
-          value="items"
-          placeholder="items"
-          required
-          pattern="[a-zA-Z_$][\\w_$]*"
-        />
+        <label>
+          What should the collection be named?
+          <input
+            type="text"
+            name="collectionName"
+            value="items"
+            placeholder="items"
+            required
+            pattern="[a-zA-Z_$][\\w_$]*"
+          />
+        </label>
       </div>
       <fieldset>
         <legend>Should files starting with an underscore be excluded?</legend>
@@ -124,6 +124,7 @@ export const collections = { items };`
   input[type='text'] {
     background-color: var(--color-zinc-700);
     border: var(--size-px) solid var(--color-zinc-600);
+    margin-top: var(--size-1-5);
     outline-offset: 3px;
     padding: var(--size-1-5) var(--size-3);
     width: 100%;
