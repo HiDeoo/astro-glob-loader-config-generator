@@ -1,4 +1,6 @@
 ---
+import '@unocss/reset/tailwind.css'
+
 import Footer from '../components/Footer.astro'
 import Head from '../components/Head.astro'
 import VisuallyHidden from '../components/VisuallyHidden.astro'
@@ -23,7 +25,81 @@ import VisuallyHidden from '../components/VisuallyHidden.astro'
 
 <style>
   :where(html) {
+    --color-zinc-50: oklch(98.48% 0 0);
+    --color-zinc-600: oklch(44.31% 0.0141 285.81);
+    --color-zinc-700: oklch(37.01% 0.0113 285.84);
+    --color-zinc-800: oklch(27.47% 0.006 286);
+    --color-zinc-900: oklch(21.02% 0.006 285.87);
+
+    --font-base: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+      Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    --font-extrabold: 800;
+
+    --rounded-md: 0.375rem;
+
     --size-npx: -1px;
     --size-px: 1px;
+    --size-0-5: 0.125rem;
+    --size-1: 0.25rem;
+    --size-1-5: 0.375rem;
+    --size-2: 0.5rem;
+    --size-4: 1rem;
+    --size-8: 2rem;
+    --size-12: 3rem;
+
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+  }
+
+  body {
+    align-items: center;
+    background-color: var(--color-zinc-900);
+    color: var(--color-zinc-50);
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-base);
+    line-height: 1.8;
+  }
+
+  main {
+    max-width: 768px;
+    padding: var(--size-8) var(--size-4) var(--size-4);
+    width: 100%;
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-extrabold);
+    line-height: 1.25;
+    margin-bottom: var(--size-8);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  code {
+    background-color: var(--color-zinc-700);
+    border-radius: var(--rounded-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    margin-inline: var(--size-2);
+    padding: var(--size-1-5) var(--size-0-5) var(--size-1);
+  }
+
+  @media (min-width: 640px) {
+    main {
+      padding: var(--size-12) var(--size-8) var(--size-8);
+    }
+
+    h1 {
+      font-size: var(--text-4xl);
+      margin-bottom: var(--size-12);
+    }
+
+    code {
+      font-size: var(--text-3xl);
+    }
   }
 </style>
