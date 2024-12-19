@@ -22,7 +22,6 @@ const items = defineCollection({
 export const collections = { items };`
 
 // TODO(HiDeoo) error message?
-// TODO(HiDeoo) bug: no file type + exclude leading underscore
 // TODO(HiDeoo) base question: mention path relatove from root
 ---
 
@@ -235,7 +234,7 @@ export const collections = { items };`
         const excludePattern = String(data.get('excludeLeadingUnderscore')) === 'yes' ? '[^_]' : ''
 
         return extensions.length === 0
-          ? `**/*${excludePattern}`
+          ? `**/${excludePattern}*`
           : extensions.length === 1
             ? `**/${excludePattern}*.${extensions[0]}`
             : `**/${excludePattern}*.{${extensions.join(',')}}`
