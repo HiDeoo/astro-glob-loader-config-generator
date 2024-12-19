@@ -1,4 +1,44 @@
-<div>Hello</div>
+---
+import { Code } from 'astro-expressive-code/components'
+
+const code = `import { glob } from 'astro/loaders';
+import { defineCollection } from 'astro:content';
+
+const items = defineCollection({
+  loader: glob({
+    pattern: "**/*.md",
+    base: "./src/data/items",
+  }),
+});
+
+export const collections = { items };`
+
+// TODO(HiDeoo) custom extension/file types?
+// TODO(HiDeoo) no file type checked?
+// TODO(HiDeoo) ignore starting with _
+// TODO(HiDeoo) filetree preview
+// TODO(HiDeoo) custom collection name
+
+// TODO(HiDeoo) validation - empty base
+// TODO(HiDeoo) validation - collection name with spaces or weird characters
+---
+
+<astro-glob-loader-config-generator>
+  <div>
+    <form>
+      <fieldset>
+        <legend>USING?</legend>
+        <input type="checkbox" id="md" name="md" checked />
+        <label for="md">Markdown</label>
+        <input type="checkbox" id="mdx" name="mdx" />
+        <label for="mdx">MDX</label>
+      </fieldset>
+      <label for="base">Where are your items located?</label>
+      <input type="text" id="base" name="base" value="./src/data/items" required minlength="1" />
+    </form>
+    <Code {code} lang="ts" title="src/content.config.ts" />
+  </div>
+</astro-glob-loader-config-generator>
 
 <style>
   div {
@@ -6,4 +46,61 @@
     border: var(--size-px) solid var(--color-zinc-600);
     padding: var(--size-4);
   }
+
+  input[type='text']:invalid {
+    border: 2px solid red;
+  }
 </style>
+
+<script>
+  customElements.define(
+    'astro-glob-loader-config-generator',
+    class AstroGlobLoaderConfigGenerator extends HTMLElement {
+      #extensions = ['md', 'mdx']
+
+      #form: HTMLFormElement | null
+      #baseElement: HTMLSpanElement | null | undefined
+      #patternElement: HTMLSpanElement | null | undefined
+
+      constructor() {
+        super()
+
+        this.#form = this.querySelector('form')
+        this.#form?.addEventListener('input', this.#handleInput)
+
+        const code = this.querySelector('.expressive-code code')
+        this.#baseElement = code?.querySelector('.ec-line:nth-child(7) span:nth-child(6)')
+        this.#patternElement = code?.querySelector('.ec-line:nth-child(6) span:nth-child(6)')
+      }
+
+      #handleInput = () => {
+        if (!this.#form) return
+
+        const formData = new FormData(this.#form)
+
+        this.#updatePattern(formData)
+        this.#updateBase(formData)
+      }
+
+      #updatePattern = (data: FormData) => {
+        if (!this.#patternElement) return
+
+        const extensions = this.#extensions.filter((ext) => data.has(ext))
+        const pattern =
+          extensions.length === 0
+            ? '**/*'
+            : extensions.length === 1
+              ? `**/*.${extensions[0]}`
+              : `**/*.{${extensions.join(',')}}`
+
+        this.#patternElement.textContent = pattern
+      }
+
+      #updateBase = (data: FormData) => {
+        if (!this.#baseElement) return
+
+        this.#baseElement.textContent = String(data.get('base')) || './src/data/items'
+      }
+    },
+  )
+</script>

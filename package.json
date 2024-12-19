@@ -20,6 +20,7 @@
     "@hideoo/tsconfig": "^2.0.1",
     "@unocss/reset": "^0.65.2",
     "astro": "^5.0.9",
+    "astro-expressive-code": "^0.38.3",
     "eslint": "^9.17.0",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
