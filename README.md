@@ -1,0 +1,1 @@
+# astro-glob-loader-config-generator
