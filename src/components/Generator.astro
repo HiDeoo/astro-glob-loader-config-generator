@@ -14,14 +14,15 @@ import { defineCollection } from 'astro:content';
 
 const items = defineCollection({
   loader: glob({
-    pattern: "**/[^_]*.md",
-    base: "src/data/items",
+    pattern: '**/[^_]*.md',
+    base: 'src/data/items',
   }),
 });
 
 export const collections = { items };`
 
 // TODO(HiDeoo) error message?
+// TODO(HiDeoo) bug: no file type + exclude leading underscore
 // TODO(HiDeoo) base question: mention path relatove from root
 ---
 
@@ -79,6 +80,7 @@ export const collections = { items };`
         </div>
       </fieldset>
     </form>
+    <p>Generated configuration:</p>
     <Code {code} lang="ts" title="src/content.config.ts" />
   </div>
 </astro-glob-loader-config-generator>
@@ -94,6 +96,7 @@ export const collections = { items };`
     display: flex;
     flex-direction: column;
     gap: var(--size-3);
+    margin-bottom: var(--size-4);
   }
 
   fieldset > div {
@@ -111,6 +114,7 @@ export const collections = { items };`
     }
   }
 
+  p,
   legend,
   form > div > label {
     display: block;
@@ -152,6 +156,8 @@ export const collections = { items };`
       #nameElement: HTMLSpanElement | null | undefined
       #nameExportElement: HTMLSpanElement | null | undefined
 
+      #copyButton: HTMLButtonElement | null
+
       constructor() {
         super()
 
@@ -161,10 +167,12 @@ export const collections = { items };`
         this.#nameInput = this.#form?.querySelector('input[name="collectionName"]')
 
         const code = this.querySelector('.expressive-code code')
-        this.#nameElement = code?.querySelector('.ec-line:nth-child(4) span:nth-child(2)')
-        this.#baseElement = code?.querySelector('.ec-line:nth-child(7) span:nth-child(6)')
-        this.#patternElement = code?.querySelector('.ec-line:nth-child(6) span:nth-child(6)')
-        this.#nameExportElement = code?.querySelector('.ec-line:nth-child(11) span:nth-child(6)')
+        this.#nameElement = code?.querySelector('.ec-line:nth-child(4) span:nth-child(3)')
+        this.#baseElement = code?.querySelector('.ec-line:nth-child(7) span:nth-child(4)')
+        this.#patternElement = code?.querySelector('.ec-line:nth-child(6) span:nth-child(4)')
+        this.#nameExportElement = code?.querySelector('.ec-line:nth-child(11) span:nth-child(7)')
+
+        this.#copyButton = this.querySelector('.copy button')
       }
 
       #handleInput = () => {
@@ -175,11 +183,47 @@ export const collections = { items };`
         this.#updatePattern(formData)
         this.#updateBase(formData)
         this.#updateName(formData)
+        this.#updateCopyButton(formData)
       }
 
       #updatePattern = (data: FormData) => {
         if (!this.#patternElement) return
+        this.#patternElement.textContent = `'${this.#getPattern(data)}'`
+      }
 
+      #updateBase = (data: FormData) => {
+        if (!this.#baseElement) return
+        this.#baseElement.textContent = `'${this.#getBase(data)}'`
+      }
+
+      #updateName = (data: FormData) => {
+        if (!this.#nameElement || !this.#nameExportElement) return
+        const name = this.#getName(data)
+        this.#nameElement.textContent = name
+        this.#nameExportElement.textContent = name
+      }
+
+      #updateCopyButton = (data: FormData) => {
+        if (!this.#copyButton) return
+
+        const code = [
+          "import { glob } from 'astro/loaders';",
+          "import { defineCollection } from 'astro:content';",
+          '',
+          `const ${this.#getName(data)} = defineCollection({`,
+          '  loader: glob({',
+          `    pattern: '${this.#getPattern(data)}',`,
+          `    base: '${this.#getBase(data)}',`,
+          '  }),',
+          '});',
+          '',
+          `export const collections = { ${this.#getName(data)} };`,
+        ]
+
+        this.#copyButton.dataset['code'] = code.join('')
+      }
+
+      #getPattern = (data: FormData) => {
         const extensions: string[] = []
 
         for (const extension of this.#extensions) {
@@ -189,19 +233,15 @@ export const collections = { items };`
         }
 
         const excludePattern = String(data.get('excludeLeadingUnderscore')) === 'yes' ? '[^_]' : ''
-        const pattern =
-          extensions.length === 0
-            ? `**/*${excludePattern}`
-            : extensions.length === 1
-              ? `**/${excludePattern}*.${extensions[0]}`
-              : `**/${excludePattern}*.{${extensions.join(',')}}`
 
-        this.#patternElement.textContent = pattern
+        return extensions.length === 0
+          ? `**/*${excludePattern}`
+          : extensions.length === 1
+            ? `**/${excludePattern}*.${extensions[0]}`
+            : `**/${excludePattern}*.{${extensions.join(',')}}`
       }
 
-      #updateBase = (data: FormData) => {
-        if (!this.#baseElement) return
-
+      #getBase = (data: FormData) => {
         let base = 'src/data/items'
 
         if (this.#baseInput?.checkValidity()) {
@@ -209,12 +249,10 @@ export const collections = { items };`
           if (value) base = value
         }
 
-        this.#baseElement.textContent = base
+        return base
       }
 
-      #updateName = (data: FormData) => {
-        if (!this.#nameElement || !this.#nameExportElement) return
-
+      #getName = (data: FormData) => {
         let name = 'items'
 
         if (this.#nameInput?.checkValidity()) {
@@ -222,8 +260,7 @@ export const collections = { items };`
           if (value) name = value
         }
 
-        this.#nameElement.textContent = ` ${name} `
-        this.#nameExportElement.textContent = ` { ${name} };`
+        return name
       }
     },
   )
