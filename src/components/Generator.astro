@@ -1,6 +1,14 @@
 ---
 import { Code } from 'astro-expressive-code/components'
 
+const extensions = [
+  { ext: 'md', label: 'Markdown' },
+  { ext: 'mdx', label: 'MDX' },
+  { ext: 'mdoc', label: 'Markdoc' },
+  { ext: 'json', label: 'JSON' },
+  { ext: 'yaml', label: 'YAML' },
+] satisfies { ext: string; label: string }[]
+
 const code = `import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 
@@ -13,8 +21,6 @@ const items = defineCollection({
 
 export const collections = { items };`
 
-// TODO(HiDeoo) loop for extensions
-
 // TODO(HiDeoo) filetree preview
 ---
 
@@ -23,10 +29,14 @@ export const collections = { items };`
     <form>
       <fieldset>
         <legend>USING?</legend>
-        <input type="checkbox" id="md" name="md" checked />
-        <label for="md">Markdown</label>
-        <input type="checkbox" id="mdx" name="mdx" />
-        <label for="mdx">MDX</label>
+        {
+          extensions.map(({ ext, label }, index) => (
+            <>
+              <input type="checkbox" id={ext} name={ext} checked={index === 0} />
+              <label for={ext}>{label}</label>
+            </>
+          ))
+        }
       </fieldset>
       <div>
         <label for="base">Where are your items located?</label>
@@ -68,7 +78,7 @@ export const collections = { items };`
   customElements.define(
     'astro-glob-loader-config-generator',
     class AstroGlobLoaderConfigGenerator extends HTMLElement {
-      #extensions = ['md', 'mdx']
+      #extensions = ['md', 'mdx', 'mdoc', 'json', 'yaml']
 
       #form: HTMLFormElement | null
       #baseInput: HTMLInputElement | null | undefined
@@ -107,7 +117,14 @@ export const collections = { items };`
       #updatePattern = (data: FormData) => {
         if (!this.#patternElement) return
 
-        const extensions = this.#extensions.filter((ext) => data.has(ext))
+        const extensions: string[] = []
+
+        for (const extension of this.#extensions) {
+          if (!data.has(extension)) continue
+          if (extension === 'yaml') extensions.push('yml')
+          extensions.push(extension)
+        }
+
         const excludePattern = data.has('excludeLeadingUnderscore') ? '[^_]' : ''
         const pattern =
           extensions.length === 0
