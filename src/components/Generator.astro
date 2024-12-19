@@ -13,11 +13,11 @@ const items = defineCollection({
 
 export const collections = { items };`
 
-// TODO(HiDeoo) custom extension/file types?
+// TODO(HiDeoo) loop for extensions
+
 // TODO(HiDeoo) no file type checked?
 // TODO(HiDeoo) ignore starting with _
 // TODO(HiDeoo) filetree preview
-// TODO(HiDeoo) custom collection name
 
 // TODO(HiDeoo) validation - empty base
 // TODO(HiDeoo) validation - collection name with spaces or weird characters
@@ -33,15 +33,21 @@ export const collections = { items };`
         <input type="checkbox" id="mdx" name="mdx" />
         <label for="mdx">MDX</label>
       </fieldset>
-      <label for="base">Where are your items located?</label>
-      <input type="text" id="base" name="base" value="./src/data/items" required minlength="1" />
+      <div>
+        <label for="base">Where are your items located?</label>
+        <input type="text" id="base" name="base" value="./src/data/items" required minlength="1" />
+      </div>
+      <div>
+        <label for="collectionName">What's the collection name?</label>
+        <input type="text" id="collectionName" name="collectionName" value="items" required minlength="1" />
+      </div>
     </form>
     <Code {code} lang="ts" title="src/content.config.ts" />
   </div>
 </astro-glob-loader-config-generator>
 
 <style>
-  div {
+  astro-glob-loader-config-generator > div {
     background-color: var(--color-zinc-800);
     border: var(--size-px) solid var(--color-zinc-600);
     padding: var(--size-4);
@@ -61,6 +67,8 @@ export const collections = { items };`
       #form: HTMLFormElement | null
       #baseElement: HTMLSpanElement | null | undefined
       #patternElement: HTMLSpanElement | null | undefined
+      #nameElement: HTMLSpanElement | null | undefined
+      #nameExportElement: HTMLSpanElement | null | undefined
 
       constructor() {
         super()
@@ -69,8 +77,10 @@ export const collections = { items };`
         this.#form?.addEventListener('input', this.#handleInput)
 
         const code = this.querySelector('.expressive-code code')
+        this.#nameElement = code?.querySelector('.ec-line:nth-child(4) span:nth-child(2)')
         this.#baseElement = code?.querySelector('.ec-line:nth-child(7) span:nth-child(6)')
         this.#patternElement = code?.querySelector('.ec-line:nth-child(6) span:nth-child(6)')
+        this.#nameExportElement = code?.querySelector('.ec-line:nth-child(11) span:nth-child(6)')
       }
 
       #handleInput = () => {
@@ -80,6 +90,7 @@ export const collections = { items };`
 
         this.#updatePattern(formData)
         this.#updateBase(formData)
+        this.#updateName(formData)
       }
 
       #updatePattern = (data: FormData) => {
@@ -99,7 +110,18 @@ export const collections = { items };`
       #updateBase = (data: FormData) => {
         if (!this.#baseElement) return
 
+        // TODO(HiDeoo) strip trailing slash?
+
         this.#baseElement.textContent = String(data.get('base')) || './src/data/items'
+      }
+
+      #updateName = (data: FormData) => {
+        if (!this.#nameElement || !this.#nameExportElement) return
+
+        const name = String(data.get('collectionName')) || 'items'
+
+        this.#nameElement.textContent = ` ${name} `
+        this.#nameExportElement.textContent = ` { ${name} };`
       }
     },
   )
