@@ -1,0 +1,300 @@
+---
+import { Code } from 'astro-expressive-code/components'
+
+const extensions = [
+  { ext: 'md', label: 'Markdown' },
+  { ext: 'mdx', label: 'MDX' },
+  { ext: 'mdoc', label: 'Markdoc' },
+  { ext: 'json', label: 'JSON' },
+  { ext: 'yaml', label: 'YAML' },
+] satisfies { ext: string; label: string }[]
+
+const code = `import { glob } from 'astro/loaders';
+import { defineCollection } from 'astro:content';
+
+const items = defineCollection({
+  loader: glob({
+    pattern: '**/[^_]*.md',
+    base: 'src/data/items',
+  }),
+});
+
+export const collections = { items };`
+---
+
+<astro-glob-loader-config-generator>
+  <form>
+    <fieldset>
+      <legend>What kind of content do you want to load?</legend>
+      <div>
+        {
+          extensions.map(({ ext, label }, index) => (
+            <label>
+              <input type="checkbox" name={ext} checked={index === 0} />
+              {label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+    <div>
+      <label>
+        Where is the content based on the root of your project?
+        <input
+          type="text"
+          name="base"
+          value="src/data/items"
+          placeholder="src/data/items"
+          required
+          pattern="[^\\\\\\/][^\\\\]*"
+        />
+      </label>
+    </div>
+    <div>
+      <label>
+        What should the collection be named?
+        <input
+          type="text"
+          name="collectionName"
+          value="items"
+          placeholder="items"
+          required
+          pattern="[a-zA-Z_$][\\w_$]*"
+        />
+      </label>
+    </div>
+    <fieldset>
+      <legend>Should files starting with an underscore be excluded?</legend>
+      <div>
+        <label>
+          <input type="radio" name="excludeLeadingUnderscore" value="yes" checked />
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="excludeLeadingUnderscore" value="no" />
+          No
+        </label>
+      </div>
+    </fieldset>
+  </form>
+  <p>Generated configuration:</p>
+  <Code {code} lang="ts" title="src/content.config.ts" />
+  <p>Additional resources:</p>
+  <ul>
+    <li>
+      <a href="https://docs.astro.build/en/guides/content-collections/#built-in-loaders">Astro Docs</a> to learn more about
+      the <code>glob()</code> loader.
+    </li>
+    <li>
+      <a href="https://www.digitalocean.com/community/tools/glob">Glob Tool</a> to quickly and easily test globs against
+      sets of test strings.
+    </li>
+  </ul>
+</astro-glob-loader-config-generator>
+
+<style>
+  astro-glob-loader-config-generator {
+    background-color: var(--color-zinc-800);
+    border: var(--size-px) solid var(--color-zinc-600);
+    display: block;
+    padding: var(--size-4);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-3);
+  }
+
+  fieldset > div {
+    background-color: var(--color-zinc-700);
+    border: var(--size-px) solid var(--color-zinc-600);
+    display: flex;
+    flex-direction: column;
+    padding: var(--size-1-5) var(--size-3);
+  }
+
+  @media (min-width: 35rem) {
+    fieldset > div {
+      flex-direction: row;
+      gap: var(--size-4);
+    }
+  }
+
+  p,
+  legend,
+  form > div > label {
+    display: block;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    margin-bottom: var(--size-1-5);
+  }
+
+  input[type='text'] {
+    background-color: var(--color-zinc-700);
+    border: var(--size-px) solid var(--color-zinc-600);
+    margin-top: var(--size-1-5);
+    outline-offset: 3px;
+    padding: var(--size-1-5) var(--size-3);
+    width: 100%;
+  }
+
+  input[type='text']:invalid {
+    border-color: var(--color-red-500);
+  }
+
+  input[type='radio'],
+  input[type='checkbox'] {
+    margin-inline-end: var(--size-1);
+  }
+
+  p {
+    margin-top: var(--size-4);
+  }
+
+  ul {
+    list-style-type: square;
+    margin-inline-start: var(--size-5);
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: var(--size-1);
+  }
+
+  a:is(:hover, :focus-visible) {
+    color: var(--color-purple-400);
+  }
+
+  code {
+    background-color: var(--color-zinc-700);
+    border-radius: var(--rounded);
+    font-size: var(--text-sm);
+    padding: var(--size-0-5) var(--size-1);
+  }
+</style>
+
+<script>
+  customElements.define(
+    'astro-glob-loader-config-generator',
+    class AstroGlobLoaderConfigGenerator extends HTMLElement {
+      #extensions = ['md', 'mdx', 'mdoc', 'json', 'yaml']
+
+      #form: HTMLFormElement | null
+      #baseInput: HTMLInputElement | null | undefined
+      #nameInput: HTMLInputElement | null | undefined
+
+      #baseElement: HTMLSpanElement | null | undefined
+      #patternElement: HTMLSpanElement | null | undefined
+      #nameElement: HTMLSpanElement | null | undefined
+      #nameExportElement: HTMLSpanElement | null | undefined
+
+      #copyButton: HTMLButtonElement | null
+
+      constructor() {
+        super()
+
+        this.#form = this.querySelector('form')
+        this.#form?.addEventListener('input', this.#handleInput)
+        this.#baseInput = this.#form?.querySelector('input[name="base"]')
+        this.#nameInput = this.#form?.querySelector('input[name="collectionName"]')
+
+        const code = this.querySelector('.expressive-code code')
+        this.#nameElement = code?.querySelector('.ec-line:nth-child(4) span:nth-child(3)')
+        this.#baseElement = code?.querySelector('.ec-line:nth-child(7) span:nth-child(4)')
+        this.#patternElement = code?.querySelector('.ec-line:nth-child(6) span:nth-child(4)')
+        this.#nameExportElement = code?.querySelector('.ec-line:nth-child(11) span:nth-child(7)')
+
+        this.#copyButton = this.querySelector('.copy button')
+      }
+
+      #handleInput = () => {
+        if (!this.#form) return
+
+        const formData = new FormData(this.#form)
+
+        this.#updatePattern(formData)
+        this.#updateBase(formData)
+        this.#updateName(formData)
+        this.#updateCopyButton(formData)
+      }
+
+      #updatePattern = (data: FormData) => {
+        if (!this.#patternElement) return
+        this.#patternElement.textContent = `'${this.#getPattern(data)}'`
+      }
+
+      #updateBase = (data: FormData) => {
+        if (!this.#baseElement) return
+        this.#baseElement.textContent = `'${this.#getBase(data)}'`
+      }
+
+      #updateName = (data: FormData) => {
+        if (!this.#nameElement || !this.#nameExportElement) return
+        const name = this.#getName(data)
+        this.#nameElement.textContent = name
+        this.#nameExportElement.textContent = name
+      }
+
+      #updateCopyButton = (data: FormData) => {
+        if (!this.#copyButton) return
+
+        const code = [
+          "import { glob } from 'astro/loaders';",
+          "import { defineCollection } from 'astro:content';",
+          '',
+          `const ${this.#getName(data)} = defineCollection({`,
+          '  loader: glob({',
+          `    pattern: '${this.#getPattern(data)}',`,
+          `    base: '${this.#getBase(data)}',`,
+          '  }),',
+          '});',
+          '',
+          `export const collections = { ${this.#getName(data)} };`,
+        ]
+
+        this.#copyButton.dataset['code'] = code.join('')
+      }
+
+      #getPattern = (data: FormData) => {
+        const extensions: string[] = []
+
+        for (const extension of this.#extensions) {
+          if (!data.has(extension)) continue
+          if (extension === 'yaml') extensions.push('yml')
+          extensions.push(extension)
+        }
+
+        const excludePattern = String(data.get('excludeLeadingUnderscore')) === 'yes' ? '[^_]' : ''
+
+        return extensions.length === 0
+          ? `**/${excludePattern}*`
+          : extensions.length === 1
+            ? `**/${excludePattern}*.${extensions[0]}`
+            : `**/${excludePattern}*.{${extensions.join(',')}}`
+      }
+
+      #getBase = (data: FormData) => {
+        let base = 'src/data/items'
+
+        if (this.#baseInput?.checkValidity()) {
+          const value = String(data.get('base'))
+          if (value) base = value
+        }
+
+        return base
+      }
+
+      #getName = (data: FormData) => {
+        let name = 'items'
+
+        if (this.#nameInput?.checkValidity()) {
+          const value = String(data.get('collectionName'))
+          if (value) name = value
+        }
+
+        return name
+      }
+    },
+  )
+</script>

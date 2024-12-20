@@ -1,0 +1,50 @@
+{
+  "name": "astro-glob-loader-config-generator",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Quickly generate a configuration for the Astro glob loader.",
+  "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --cache --max-warnings=0 && tsc --noEmit",
+    "format": "prettier -w --cache --ignore-unknown ."
+  },
+  "devDependencies": {
+    "@hideoo/eslint-config": "^4.0.0",
+    "@hideoo/prettier-config": "^2.0.0",
+    "@hideoo/tsconfig": "^2.0.1",
+    "@unocss/reset": "^0.65.2",
+    "astro": "^5.0.9",
+    "astro-expressive-code": "^0.38.3",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.33.5",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "private": true,
+  "sideEffects": false,
+  "keywords": [
+    "astro",
+    "content",
+    "collections",
+    "glob",
+    "loader",
+    "config"
+  ],
+  "homepage": "https://github.com/HiDeoo/astro-glob-loader-config-generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiDeoo/astro-glob-loader-config-generator.git"
+  },
+  "bugs": "https://github.com/HiDeoo/astro-glob-loader-config-generator/issues"
+}
