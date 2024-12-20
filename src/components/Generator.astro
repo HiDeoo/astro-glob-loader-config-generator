@@ -250,6 +250,8 @@ export const collections = { items };`
           `    base: '${this.#getBase(data)}',`,
           '  }),',
           '});',
+          '',
+          `export const collections = { ${this.#getName(data)} };`,
         ]
 
         this.#copyButton.dataset['code'] = code.join('')
