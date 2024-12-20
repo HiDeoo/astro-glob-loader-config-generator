@@ -206,6 +206,10 @@ export const collections = { items };`
         this.#nameExportElement = code?.querySelector('.ec-line:nth-child(11) span:nth-child(7)')
 
         this.#copyButton = this.querySelector('.copy button')
+
+        if (this.#form) {
+          this.#updateCopyButton(new FormData(this.#form))
+        }
       }
 
       #handleInput = () => {
@@ -240,17 +244,12 @@ export const collections = { items };`
         if (!this.#copyButton) return
 
         const code = [
-          "import { glob } from 'astro/loaders';",
-          "import { defineCollection } from 'astro:content';",
-          '',
           `const ${this.#getName(data)} = defineCollection({`,
           '  loader: glob({',
           `    pattern: '${this.#getPattern(data)}',`,
           `    base: '${this.#getBase(data)}',`,
           '  }),',
           '});',
-          '',
-          `export const collections = { ${this.#getName(data)} };`,
         ]
 
         this.#copyButton.dataset['code'] = code.join('')
