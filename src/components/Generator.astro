@@ -282,7 +282,7 @@ export const collections = { items };`
           if (value) base = value
         }
 
-        return base
+        return base.trim()
       }
 
       #getName = (data: FormData) => {
