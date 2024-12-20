@@ -1,10 +1,10 @@
 ---
+// Favicon designed by OpenMoji – the open-source emoji and icon project. License: CC BY-SA 4.0
+
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
 const description = '// TODO(HiDeoo) '
 const ogImageUrl = new URL('/images/og.png', Astro.site)
 const title = '// TODO(HiDeoo) '
-
-// TODO(HiDeoo) theme-color below
 ---
 
 <meta charset="utf-8" />
@@ -12,12 +12,12 @@ const title = '// TODO(HiDeoo) '
 <title>{title}</title>
 
 <link rel="canonical" href={canonicalUrl} />
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
 <meta name="author" content="HiDeoo" />
 <meta name="color-scheme" content="dark" />
 <meta name="description" property="og:description" content={description} />
-<meta name="theme-color" content="hsl(222 47% 11%)" />
+<meta name="theme-color" content="oklch(21.02% 0.006 285.87)" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta property="og:image" content={ogImageUrl} />
