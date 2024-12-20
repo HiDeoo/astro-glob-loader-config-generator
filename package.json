@@ -2,7 +2,7 @@
   "name": "astro-glob-loader-config-generator",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "// TODO(HiDeoo)",
+  "description": "Quickly generate a configuration for the Astro glob loader.",
   "author": "HiDeoo <github@hideoo.dev> (https://hideoo.dev)",
   "type": "module",
   "scripts": {
@@ -34,7 +34,12 @@
   "private": true,
   "sideEffects": false,
   "keywords": [
-    "// TODO(HiDeoo)"
+    "astro",
+    "content",
+    "collections",
+    "glob",
+    "loader",
+    "config"
   ],
   "homepage": "https://github.com/HiDeoo/astro-glob-loader-config-generator",
   "repository": {
