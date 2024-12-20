@@ -1,9 +1,9 @@
 <div align="center">
-  <h1>astro-glob-loader-config-generator 🚧</h1>
-  <p>astro-glob-loader-config-generator description</p>
+  <h1>astro-glob-loader-config-generator ✳️</h1>
+  <p>Quickly generate a configuration for the Astro glob loader.</p>
   <p>
-    <a href="https://dummyimage.com/520x350/121212/cdc8be.png&text=screenshot" title="Screenshot of astro-glob-loader-config-generator">
-      <img alt="Screenshot of astro-glob-loader-config-generator" src="https://dummyimage.com/520x350/121212/cdc8be.png&text=screenshot" width="520" />
+    <a href="https://i.imgur.com/Tl1RzLT.png" title="Screenshot of astro-glob-loader-config-generator">
+      <img alt="Screenshot of astro-glob-loader-config-generator" src="https://i.imgur.com/Tl1RzLT.png" width="520" />
     </a>
   </p>
 </div>
@@ -18,12 +18,9 @@
   <br />
 </div>
 
-## Features
+## Getting Started
 
-astro-glob-loader-config-generator presentation.
-
-- astro-glob-loader-config-generator feature 1
-- astro-glob-loader-config-generator feature 2
+Head to the [astro-glob-loader-config-generator website](https://astro-glob-loader-config-generator.netlify.app/) and configure the Astro `glob()` loader to match your needs.
 
 ## License
 
