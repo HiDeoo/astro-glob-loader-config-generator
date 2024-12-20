@@ -23,70 +23,80 @@ export const collections = { items };`
 ---
 
 <astro-glob-loader-config-generator>
-  <div>
-    <form>
-      <fieldset>
-        <legend>What kind of content do you want to load?</legend>
-        <div>
-          {
-            extensions.map(({ ext, label }, index) => (
-              <label>
-                <input type="checkbox" name={ext} checked={index === 0} />
-                {label}
-              </label>
-            ))
-          }
-        </div>
-      </fieldset>
+  <form>
+    <fieldset>
+      <legend>What kind of content do you want to load?</legend>
+      <div>
+        {
+          extensions.map(({ ext, label }, index) => (
+            <label>
+              <input type="checkbox" name={ext} checked={index === 0} />
+              {label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+    <div>
+      <label>
+        Where is the content based on the root of your project?
+        <input
+          type="text"
+          name="base"
+          value="src/data/items"
+          placeholder="src/data/items"
+          required
+          pattern="[^\\\\\\/][^\\\\]*"
+        />
+      </label>
+    </div>
+    <div>
+      <label>
+        What should the collection be named?
+        <input
+          type="text"
+          name="collectionName"
+          value="items"
+          placeholder="items"
+          required
+          pattern="[a-zA-Z_$][\\w_$]*"
+        />
+      </label>
+    </div>
+    <fieldset>
+      <legend>Should files starting with an underscore be excluded?</legend>
       <div>
         <label>
-          Where is the content based on the root of your project?
-          <input
-            type="text"
-            name="base"
-            value="src/data/items"
-            placeholder="src/data/items"
-            required
-            pattern="[^\\\\\\/][^\\\\]*"
-          />
+          <input type="radio" name="excludeLeadingUnderscore" value="yes" checked />
+          Yes
         </label>
-      </div>
-      <div>
         <label>
-          What should the collection be named?
-          <input
-            type="text"
-            name="collectionName"
-            value="items"
-            placeholder="items"
-            required
-            pattern="[a-zA-Z_$][\\w_$]*"
-          />
+          <input type="radio" name="excludeLeadingUnderscore" value="no" />
+          No
         </label>
       </div>
-      <fieldset>
-        <legend>Should files starting with an underscore be excluded?</legend>
-        <div>
-          <label>
-            <input type="radio" name="excludeLeadingUnderscore" value="yes" checked />
-            Yes
-          </label>
-          <label>
-            <input type="radio" name="excludeLeadingUnderscore" value="no" />
-            No
-          </label>
-        </div>
-      </fieldset>
-    </form>
-    <p>Generated configuration:</p>
-    <Code {code} lang="ts" title="src/content.config.ts" />
-  </div>
+    </fieldset>
+  </form>
+  <p>Generated configuration:</p>
+  <Code {code} lang="ts" title="src/content.config.ts" />
+  <p>Additional resources:</p>
+  <ul>
+    <li>
+      <a href="https://docs.astro.build/en/guides/content-collections/#built-in-loaders">Astro Docs</a> to learn more about
+      the <code>glob()</code> loader.
+    </li>
+    <li>
+      <a href="https://www.digitalocean.com/community/tools/glob">Glob Tool</a> to quickly and easily test globs against
+      sets of test strings.
+    </li>
+  </ul>
 </astro-glob-loader-config-generator>
 
 <style>
-  astro-glob-loader-config-generator > div {
+  astro-glob-loader-config-generator {
     background-color: var(--color-zinc-800);
     border: var(--size-px) solid var(--color-zinc-600);
+    display: block;
     padding: var(--size-4);
   }
 
@@ -94,7 +104,6 @@ export const collections = { items };`
     display: flex;
     flex-direction: column;
     gap: var(--size-3);
-    margin-bottom: var(--size-4);
   }
 
   fieldset > div {
@@ -137,6 +146,31 @@ export const collections = { items };`
   input[type='radio'],
   input[type='checkbox'] {
     margin-inline-end: var(--size-1);
+  }
+
+  p {
+    margin-top: var(--size-4);
+  }
+
+  ul {
+    list-style-type: square;
+    margin-inline-start: var(--size-5);
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: var(--size-1);
+  }
+
+  a:is(:hover, :focus-visible) {
+    color: var(--color-purple-400);
+  }
+
+  code {
+    background-color: var(--color-zinc-700);
+    border-radius: var(--rounded);
+    font-size: var(--text-sm);
+    padding: var(--size-0-5) var(--size-1);
   }
 </style>
 

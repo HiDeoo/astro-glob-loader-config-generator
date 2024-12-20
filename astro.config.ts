@@ -12,7 +12,7 @@ export default defineConfig({
         codeBackground: 'var(--color-zinc-800)',
         frames: {
           editorActiveTabBackground: 'var(--color-zinc-800)',
-          editorActiveTabIndicatorTopColor: 'var(--color-purple-500)',
+          editorActiveTabIndicatorTopColor: 'var(--color-purple-400)',
           editorTabBarBackground: 'var(--color-zinc-700)',
           frameBoxShadowCssValue: 'none',
         },
