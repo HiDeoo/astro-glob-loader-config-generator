@@ -1,0 +1,21 @@
+---
+import Page from '../layouts/Page.astro'
+---
+
+<Page>
+  Whoops, this page doesn't exist.
+  <p>
+    <a href="/">Go back home</a>
+  </p>
+</Page>
+
+<style>
+  a {
+    text-decoration: underline;
+    text-underline-offset: var(--size-1);
+  }
+
+  a:is(:hover, :focus-visible) {
+    color: var(--color-purple-400);
+  }
+</style>
